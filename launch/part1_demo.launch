@@ -1,0 +1,12 @@
+<launch>
+    <!-- Arguments -->
+    <arg name="goal_x" doc="Goal X position (float)" />
+    <arg name="goal_y" doc="Goal Y position (float)" />
+
+    <!-- Main node -->
+    <node name="go_to_goal" pkg="sair-p2-GeorgeKreye" type="go_to_goal.py" output="screen" />
+
+    <!-- Script for sending goal to main node -->
+    <node name="goal_command" pkg="sair-p2-GeorgeKreye" type="go_to_goal_command.py"
+    args="$(arg goal_x) $(arg goal_y)" />
+</launch>

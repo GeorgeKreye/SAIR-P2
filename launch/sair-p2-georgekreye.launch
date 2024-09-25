@@ -1,0 +1,25 @@
+<!-- Main launch file for Project 2, launches everything at once-->
+<launch>
+    <!-- Arguments -->
+    <arg name="num_clusters" doc="Number (int) of clusters to use in frontier segmentation" default="5" />
+    <arg name="expansion_radius" doc="Radius (int) in cells in which obstacles can be expanded" default="1" />
+    <arg name="proximity_weight" doc="Weight (float) to use for proximity in cluster ranking" default="1.0" />
+    <arg name="size_weight" doc="Weight (float) to use for frontier size in cluster ranking" default="1.0" />
+    <arg name="termination_threshold" doc="% (float) of map to have explored before stopping" default="0.95" />
+
+    <!-- Launch file includes -->
+    <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_stage_4.launch"></include>
+    <include file="$(find turtlebot3_slam)/launch/turtlebot3_slam.launch">
+        <arg name="slam_methods" value="gmapping" />
+    </include>
+    <include file="$(find sair-p2-GeorgeKreye)/launch/turtlebot3_navigation.launch"></include>
+
+    <!-- Nodes -->
+    <node name="go_to_goal" pkg="sair-p2-GeorgeKreye" type="go_to_goal.py" output="screen"/>
+    <node name="frontier_finder" pkg="sair-p2-GeorgeKreye" type="find_frontiers.py" output="screen"
+    args="$(arg num_clusters) $(arg expansion_radius)" />
+    <node name="frontier_explorer" pkg="sair-p2-GeorgeKreye" type="frontier_exploration.py" output="screen"
+    args="$(arg proximity_weight) $(arg size_weight)" />
+    <node name="progress_checker" pkg="sair-p2-GeorgeKreye" type="progress_checker.py" output="screen"
+    args="$(arg termination_threshold)" />
+</launch>
